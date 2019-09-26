@@ -2,8 +2,10 @@
 //MONGODB CONNECT mongodb+srv://jeff007:<password>@cluster0-shtxy.mongodb.net/test?retryWrites=true&w=majority
 const express = require('express');
 const bodyParser = require('body-parser');
-const app = express();
 const mongoose = require('mongoose');
+const Thing = require('./models/thing');
+const app = express();
+
 
 mongoose.connect('mongodb+srv://jeff007:tczJd3dArrDW3XGM@cluster0-shtxy.mongodb.net/test?retryWrites=true&w=majority')
   .then(() => {
@@ -23,11 +25,27 @@ app.use((req, res, next) => {
 });
 app.use(bodyParser.json());
 app.post('/api/stuff', (req, res, next) => {
-    console.log(req.body);
-    res.status(201).json({
-        message: 'Thing created successfully!'
+    const thing = new Thing({
+      title: req.body.title,
+      description: req.body.description,
+      imageUrl: req.body.imageUrl,
+      price: req.body.price,
+      userId: req.body.userId
     });
-});
+    thing.save().then(
+      () => {
+        res.status(201).json({
+          message: 'Post saved successfully!'
+        });
+      }
+    ).catch(
+      (error) => {
+        res.status(400).json({
+          error: error
+        });
+      }
+    );
+  });
 app.use('/api/stuff', (req, res, next) => {
     const stuff = [
         {
