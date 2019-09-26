@@ -46,6 +46,21 @@ app.post('/api/stuff', (req, res, next) => {
     }
   );
 });
+app.get('/api/stuff/:id', (req, res, next) => {
+    Thing.findOne({
+      _id: req.params.id
+    }).then(
+      (thing) => {
+        res.status(200).json(thing);
+      }
+    ).catch(
+      (error) => {
+        res.status(404).json({
+          error: error
+        });
+      }
+    );
+  });
 app.put('/api/stuff/:id', (req, res, next) => {
   const thing = new Thing({
     _id: req.params.id,
@@ -84,42 +99,7 @@ app.delete('/api/stuff/:id', (req, res, next) => {
     }
   );
 });
-app.get('/api/stuff/:id', (req, res, next) => {
-  Thing.findOne({
-    _id: req.params.id
-  }).then(
-    (thing) => {
-      res.status(200).json(thing);
-    }
-  ).catch(
-    (error) => {
-      res.status(404).json({
-        error: error
-      });
-    }
-  );
-});
-app.use('/api/stuff', (req, res, next) => {
-  const stuff = [
-    {
-      _id: 'fddfdgv',
-      title: 'My first thing',
-      description: 'All of the info about my thing',
-      imageUrl: 'https://cdn.pixabay.com/photo/2017/03/27/14/48/tea-2179175_960_720.jpg',
-      price: 4900,
-      userId: 'dfdsfgfdsg'
-    },
-    {
-      _id: 'fddfdgv',
-      title: 'My second thing',
-      description: 'All of the info about my thing',
-      imageUrl: 'https://image.shutterstock.com/image-photo/cup-tea-mint-on-wooden-260nw-139065488.jpg',
-      price: 3700,
-      userId: 'dfdsfgfdsg'
-    },
-  ];
-  res.status(200).json(stuff);
-});
+
 app.use('/api/stuff', (req, res, next) => {
   Thing.find().then(
     (things) => {
