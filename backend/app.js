@@ -7,7 +7,7 @@ const Thing = require('./models/thing');
 const stuffRoutes = require('./routes/stuff');
 const app = express();
 const userRoutes = require('./routes/user');
-
+const path = require('path');
 
 mongoose.connect('mongodb+srv://jeff007:tczJd3dArrDW3XGM@cluster0-shtxy.mongodb.net/test?retryWrites=true&w=majority')
   .then(() => {
@@ -25,6 +25,7 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   next();
 });
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(bodyParser.json());
 app.use('/api/stuff', stuffRoutes);
 app.use('/api/auth', userRoutes);
